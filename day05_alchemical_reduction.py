@@ -7,37 +7,23 @@ def same_type(s1: str, s2: str) -> bool:
 
 
 def reduct(polymer: str) -> str:
-    units = list(polymer)
-    idxs = [i for i in range(len(units))]
-    deleted = set()
+    cs = list(polymer)
+    l = len(cs)-1
+    i = 0
 
-    def next_idx(prev_idx: int) -> int:
-        for idx in range(prev_idx + 1, len(units)):
-            if idx not in deleted:
-                return idx
-        return len(units)
+    while i<l:
+        c1=cs[i]
+        c2=cs[i+1]
 
-    did_reduct = True
-    while did_reduct:
-        did_reduct = False
+        if same_type(c1,c2) and c1!=c2:
+            del(cs[i],cs[i])
+            i-=1
+            l-=2
+        else:
+            i+=1
 
-        lo = next_idx(-1)
-        hi = next_idx(lo)
+    return "".join(cs)
 
-        while hi < len(units):
-            unit1 = units[lo]
-            unit2 = units[hi]
-            if unit1.lower() == unit2.lower() and unit1 != unit2:
-                deleted.add(lo)
-                deleted.add(hi)
-                lo = next_idx(hi)
-                hi = next_idx(lo)
-                did_reduct = True
-            else:
-                lo = hi
-                hi = next_idx(lo)
-
-    return "".join(unit for i, unit in enumerate(units) if i not in deleted)
 
 assert reduct("Aa") == ""
 assert reduct("abBA") == ""
